@@ -1,0 +1,107 @@
+body {
+    height: 100dvh;
+    width: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+#main-page {
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+#WO-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+#active-tables {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 2px solid #ccc;
+}
+
+#active-tables h3 {
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 5px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background: #f0f0f0;
+    transition: background 0.2s, color 0.2s;
+}
+
+#active-tables h3:hover {
+    background: #e0e0e0;
+}
+
+#active-tables h3.active {
+    background: white;
+    border-color: #ccc;
+    border-bottom: 2px solid white;
+    /* visually “connected” to content */
+    font-weight: bold;
+}
+
+#tab-content {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 0 5px 5px 5px;
+    background: white;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    padding: 0px;
+}
+
+#WO-table-wrapper {
+    flex-shrink: 1;
+    overflow: auto;
+}
+
+#input-form {
+    display: flex;
+    flex-direction: row;
+}
+
+#write-off-table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+#write-off-table thead {
+    border-collapse: collapse;
+    font-weight: bold;
+    background-color: #ddd;
+    top: 0;
+    position: sticky;
+    z-index: 1;
+}
+
+#write-off-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+#write-off-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+#write-off-table tbody tr:hover {
+    background-color: #e6f3ff;
+}
+
+#write-off-table tbody tr.selected {
+    background-color: #cde5ff;
+}
+
+#write-off-table th,
+#write-off-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}

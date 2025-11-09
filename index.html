@@ -2,9 +2,107 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="utility.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="h-100dv d-flex flex-col overflow-hidden m-0">
+    <div id="menu-container" class="d-flex flex-row p-1">
+        <button id="open-file">Open File</button>
+        <input type="file" id="file-chooser" accept=".csv" style="display:none;">
+        <button id="new-file">New File</button>
+        <button id="save-file">Save File</button>
+        <span class="flex-grow"></span>
+        <button id="import-file">Import</button>
+        <input type="file" id="import-file-chooser" accept=".csv" style="display:none;">
+    </div>
+    <div id="main-page" class="d-flex flex-shrink overflow-hidden">
+        <div id="WO-container-wrapper" class="d-flex flex-col overflow-hidden flex-grow">
+            <div id="active-tables" class="d-flex items-center pl-2"></div>
+            <div id="tab-content" class="d-flex flex-col overflow-hidden">
+                <form id="input-form" class="d-flex flex-row gap-1 m-2">
+                    <input type="date" id="date-input" required class="flex-grow text-right">
+                    <input type="number" step="0.01" id="cost-input" placeholder="Cost" required
+                        class="flex-grow text-right">
+                    <input type="text" list="categories" id="category-input" placeholder="Category" required
+                        class="flex-grow text-right">
+                    <datalist id="categories">
+                        <option value="work"></option>
+                        <option value="play"></option>
+                        <option value="something"></option>
+                    </datalist>
+                    <input type="text" id="description-input" placeholder="Description" required
+                        class="flex-grow text-right">
+                    <button type="submit">Add Record</button>
+                </form>
+                <label id="record-added" class="text-right pr-2 hide">sfsfsdf</label>
+                <div id="WO-table-wrapper" class="d-flex flex-shrink overflow-auto m-2">
+                    <table id="write-off-table" class="pos-relative w-full">
+                        <thead class="pos-sticky z-10 top-0">
+                            <th class="pos-relative" data-key="Date">
+                                <div>Date</div>
+                                <div class="carrot pos-absolute top-50 transY--50 pr-2 z-10 right-0">&#9650&#9660</div>
+                            </th>
+                            <th class="pos-relative" data-key="Cost">
+                                <div>Cost</div>
+                                <div class="carrot pos-absolute top-50 transY--50 pr-2 z-10 right-0">&#9650&#9660</div>
+                            </th>
+                            <th class="pos-relative" data-key="Category">
+                                <div>Category</div>
+                                <div class="carrot pos-absolute top-50 transY--50 pr-2 z-10 right-0">&#9650&#9660</div>
+                            </th>
+                            <th class="pos-relative" data-key="Description">
+                                <div>Description</div>
+                                <div class="carrot pos-absolute top-50 transY--50 pr-2 z-10 right-0">&#9650&#9660</div>
+                            </th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="table-footer" class="d-flex flex-row m-2">
+                    <label id="remove-record-label" class="flex-grow text-right m-2 hide">ugyg</label>
+                    <button id="remove-record">Remove Record</button>
+                </div>
+            </div>
+        </div>
+        <div id="totals-container" class="d-flex flex-col overflow-hidden m-2 items-center">
+            <h3>Totals</h3>
+            <svg id="donutChart" class="donut" viewBox="0 0 42 42">
+                <circle cx="21" cy="21" r="15.9155" fill="#F5F1EB"></circle>
+                <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#eee" stroke-width="20"></circle>
+            </svg>
+            <div id="totals-table-wrapper" class="overflow-auto w-full">
+                <table id="totals-table" class="pos-relative w-full">
+                    <thead class="z-10 pos-sticky top-0">
+                        <th>Color</th>
+                        <th>Category</th>
+                        <th>Total</th>
+                        <th>Percent</th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="overlay" class="d-none d-flex flex-col pos-absolute z-50 top-0 left-0 w-full h-full overflow-hidden">
+        <div id="import-table-wrapper" class="d-flex flex-col flex-grow p-4 overflow-hidden">
+            <div class="d-flex flex-row">
+                <button id="close-import" class="ratio-1-1 m-2">x</button>
+                <div class="flex-grow"></div>
+            </div>
+            <div id="import-table-shrink-wrap" class="overflow-auto flex-grow">
+                <table id="import-table">
+                    <thead class="z-10 pos-sticky top-0"></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="d-flex flex-row">
+                <div class="flex-grow"></div>
+                <button id="accept-import" class="m-2">Accept</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="app.js"></script>
 </body>
 
 </html>
