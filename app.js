@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     evt.preventDefault();
                     commitEdit(); // save value
                     moveToCell(cell, 'right');
-                } else if (evt.key === 'Tab' && evt.shiftKey){
+                } else if (evt.key === 'Tab' && evt.shiftKey) {
                     evt.preventDefault();
                     commitEdit(); // save value
                     moveToCell(cell, 'left');
@@ -504,25 +504,90 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!categoryOptions.some(cat => cat.toLowerCase() === newValue.toLowerCase())) {
                 categoryOptions.push(newValue);
             }
-            tr.addEventListener('click', () => {
-                if (selectedRow) selectedRow.classList.remove('selected');
-                tr.classList.add('selected');
-                let rowDate = row[0];
-                if (rowDate.includes('/')) {
-                    const [month, day, year] = rowDate.split('/');
-                    if (!month || !day || !year) rowDate = null;
-                    else rowDate = `${year}-${month}-${day}`;
+            let clickTimer = null;
+            const delay = 250;
+            tr.addEventListener('click', (event) => {
+                if (clickTimer) {
+                    // second click happened before timer expired → double-click action
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+                    const td = event.target.closest("td");
+                    focusTD(td, tr);
+                } else {
+                    // first click → start timer
+                    clickTimer = setTimeout(() => {
+                        selectRow(tr, row);
+                        clickTimer = null;
+                    }, delay);
                 }
-                selectedRow = tr;
-                date.value = rowDate;
-                cost.value = row[1];
-                category.value = row[2];
-                description.value = row[3]
-                rrLabel.classList.remove('hide');
-                rrLabel.textContent = row.join(', ');
             });
             currentTableBody.appendChild(tr);
         });
+
+        function focusTD(cell, row) {
+            let originalValue = cell.textContent;
+
+            cell.contentEditable = true;
+
+            // select all text
+            const range = document.createRange();
+            range.selectNodeContents(cell);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            // scroll into view if needed
+            cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+            // define key handler
+            const handleKey = (e) => {
+                switch (e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        cell.blur();
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        cell.textContent = originalValue;
+                        cell.blur(); // triggers blur handler below
+                        break;
+                }
+            };
+
+            // attach listener
+            cell.addEventListener('keydown', handleKey);
+
+            // remove everything on blur
+            cell.addEventListener('blur', () => {
+                cell.contentEditable = false;
+                const rowIndex = Array.from(currentTableBody.children).indexOf(row);
+                const colIndex = Array.from(row.children).indexOf(cell);
+                budgetData[rowIndex][colIndex] = cell.textContent;
+                localStorage.setItem(localStorage["currentTable"], JSON.stringify(budgetData));
+                renderTotals();
+                window.getSelection().removeAllRanges();
+                cell.removeEventListener('keydown', handleKey); // remove the key listener
+            }, { once: true, capture: true });
+        }
+
+
+        function selectRow(tr, row) {
+            if (selectedRow) selectedRow.classList.remove('selected');
+            tr.classList.add('selected');
+            let rowDate = row[0];
+            if (rowDate.includes('/')) {
+                const [month, day, year] = rowDate.split('/');
+                if (!month || !day || !year) rowDate = null;
+                else rowDate = `${year}-${month}-${day}`;
+            }
+            selectedRow = tr;
+            date.value = rowDate;
+            cost.value = row[1];
+            category.value = row[2];
+            description.value = row[3]
+            rrLabel.classList.remove('hide');
+            rrLabel.textContent = row.join(', ');
+        }
 
         updateCategoryOptions();
 
